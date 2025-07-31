@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, HeartHandshake } from 'lucide-react';
 import Footer from '../components/Footer';

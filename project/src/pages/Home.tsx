@@ -1,114 +1,244 @@
-import { useState, useEffect, useRef } from 'react';
-import { ParkingCircle, Sparkles, Check, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { Building, MapPinIcon, Clock3, CreditCard, Award, Sparkles, Snowflake, Search as SearchIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 
 function Home() {
+  const [showListSpace, setShowListSpace] = useState(false);
   const [showSurprise, setShowSurprise] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-
-  // Scroll-triggered animation logic
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    sectionRefs.current.forEach((section) => {
-      if (section) observer.observe(section);
-    });
-
-    return () => {
-      sectionRefs.current.forEach((section) => {
-        if (section) observer.unobserve(section);
-      });
-    };
-  }, []);
-
-  const addSectionRef = (el: HTMLElement | null) => {
-    if (el) sectionRefs.current.push(el);
-  };
 
   const plans = [
     {
       id: 'basic',
-      name: 'Starter / Weekly',
-      price: '₹499/week',
-      features: ['Standard parking access', 'Security surveillance', 'Mobile app support']
+      name: 'Winter Basic',
+      price: '$9.99/month',
+      image: 'https://images.unsplash.com/photo-1613310023042-ad79320c00ff?auto=format&fit=crop&q=80',
+      features: ['Basic spot reservations', 'Snow removal service', 'Mobile app access']
     },
     {
       id: 'premium',
-      name: 'Premium / Monthly',
-      price: '₹1499/month',
-      features: ['Reserved premium spots', '24/7 customer assistance', 'Advance booking options', 'Exclusive discounts']
+      name: 'Winter Premium',
+      price: '$19.99/month',
+      image: 'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&q=80',
+      features: ['Heated parking spots', '24/7 winter support', 'Advanced reservations', 'Reward points 2x']
     },
     {
       id: 'business',
-      name: 'Elite / Annual',
-      price: '₹4999/year',
-      features: ['Multiple vehicle slots', 'VIP parking zones', 'Corporate fleet management', 'Priority service']
+      name: 'Winter Business',
+      price: '$49.99/month',
+      image: 'https://images.unsplash.com/photo-1551582045-6ec9c11d8697?auto=format&fit=crop&q=80',
+      features: ['Multiple vehicle support', 'Dedicated heated zones', 'Team management', 'Priority snow clearing']
+    }
+  ];
+
+  const parkingModes = [
+    {
+      title: "Click",
+      description: "Signup for our website and – Search/Select an available space from the displayed parking lots in the map.",
+      image: "https://images.unsplash.com/photo-1606787620156-2b4e1e6d3b8b?auto=format&fit=crop&q=80"
+    },
+    {
+      title: "Call",
+      description: "Commuters at the parking lot can call the customer number with Parking lot and Bay Info - Provide Vehicle Details.",
+      image: "https://images.unsplash.com/photo-1596524430615-b46475ddff6e?auto=format&fit=crop&q=80"
+    },
+    {
+      title: "Come-In",
+      description: "Check the availability over the app. Drive your vehicle to your desired location and our operator shall assist you create a parking entry.",
+      image: "https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&q=80"
+    }
+  ];
+
+  const howItWorks = [
+    {
+      icon: <SearchIcon className="text-indigo-400" size={40} />,
+      title: "Find Your Spot",
+      description: "Search for available parking spots in your desired location"
+    },
+    {
+      icon: <Clock3 className="text-green-400" size={40} />,
+      title: "Book & Pay",
+      description: "Select your time slot and complete the secure payment process"
+    },
+    {
+      icon: <CreditCard className="text-pink-400" size={40} />,
+      title: "Park with Ease",
+      description: "Use your digital pass to access your reserved heated parking spot"
+    },
+    {
+      icon: <Award className="text-orange-400" size={40} />,
+      title: "Earn Rewards",
+      description: "Collect points with every booking and unlock exclusive benefits"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative overflow-hidden">
-      {/* Navigation Bar */}
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-black relative overflow-hidden">
+      {/* Santa sleigh animation */}
+      <div 
+        className="fixed z-20 pointer-events-none"
+        style={{
+          animation: 'santa-fly 20s linear infinite',
+          top: '50px',
+          right: '-200px'
+        }}
+      >
+        <div className="relative">
+          <img 
+            src="https://images.unsplash.com/photo-1577385384026-3175a59404a8?auto=format&fit=crop&q=80" 
+            alt="Santa's Sleigh"
+            className="w-32 h-32 object-contain transform -scale-x-100"
+            style={{
+              filter: 'brightness(1.2) contrast(1.1)'
+            }}
+          />
+          {[...Array(5)].map((_, i) => (
+            <Sparkles
+              key={i}
+              className="absolute text-yellow-300/50"
+              size={16}
+              style={{
+                top: '50%',
+                right: `${i * 20}px`,
+                transform: 'translateY(-50%)',
+                animation: `sparkle ${i * 0.5 + 1}s ease-in-out infinite`
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
       <nav className="bg-gray-900 p-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-white flex items-center">
-            <ParkingCircle className="mr-2 text-blue-400" size={24} />
+        <h1 className="text-2xl font-bold text-white flex items-center">
             ParkEase
           </h1>
           <div className="space-x-4">
-            <Link to="/search" className="text-white hover:text-blue-400 transition-all duration-300 hover:scale-105">
+            <Link to="/search" className="text-white hover:text-blue-400">
               Search Parking
             </Link>
-            <Link to="/list-your-space" className="text-white hover:text-blue-400 transition-all duration-300 hover:scale-105">
+            <button 
+              onClick={() => setShowListSpace(true)} 
+              className="text-white hover:text-blue-400"
+            >
               List Your Space
-            </Link>
-            <Link to="/team" className="text-white hover:text-blue-400 transition-all duration-300 hover:scale-105">
+            </button>
+            <Link to="/team" className="text-white hover:text-blue-400">
               Our Team
+            </Link>
+            <Link to="/blogs" className="text-white hover:text-blue-400">
+              Blogs
+            </Link>
+            <Link to="/profile" className="text-white hover:text-blue-400">
+              Profile
             </Link>
             <button
               onClick={() => setShowSurprise(true)}
-              className="text-white hover:text-blue-400 flex items-center gap-1 transition-all duration-300 hover:scale-105"
+              className="text-white hover:text-blue-400 flex items-center gap-1"
             >
-              <Sparkles size={16} className="text-yellow-400 animate-sparkle" />
+              <Sparkles size={16} className="text-yellow-400" />
               Surprise
             </button>
           </div>
         </div>
       </nav>
 
-      
+      <div className="relative h-[400px] mb-8">
+        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        <img
+          src="https://images.unsplash.com/photo-1586521995568-39abaa0c2311?auto=format&fit=crop&q=80"
+          alt="Parking Lot"
+          className="w-full h-full object-cover brightness-50"
+        />
+        /{'>'}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Parking Made Easy</h1>
+            <p className="text-xl text-gray-200 mb-6">Park,Pay,and go--its that simple</p>
+            <Link 
+              to="/search"
+              className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
+            >
+              <SearchIcon size={20} />
+              Find Parking
+            </Link>
+          </div>
+        </div>
+      </div>
 
-      {/* Pricing Plans Section */}
-      <section ref={addSectionRef} className="scroll-fade-in max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Modes of Parking Section */}
         <div className="bg-gray-900 rounded-2xl p-8 mb-8">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">Pricing Plans</h2>
+          <h2 className="text-4xl font-bold text-white mb-4 text-center">Modes Of Parking</h2>
+          <p className="text-center text-gray-300 mb-8">
+            Commuter can select from any of the 3 modes to create a Parking Event.<br />
+            You must obtain a receipt or an electronic confirmation of your parking event before leaving the lot.
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {parkingModes.map((mode, index) => (
+              <div key={index} className="bg-gray-800 rounded-xl overflow-hidden transform hover:scale-105 transition-duration-300">
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={mode.image} 
+                    alt={mode.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-white mb-3">{mode.title}</h3>
+                  <p className="text-gray-300">{mode.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* How It Works Section */}
+        <div className="bg-gray-900 rounded-2xl p-8 mb-8">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">How ParkEase Works</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {howItWorks.map((step, index) => (
+              <div key={index} className="bg-gray-800 p-6 rounded-xl text-center relative">
+                {index < howItWorks.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 text-gray-600 text-4xl">
+                    →
+                  </div>
+                )}
+                <div className="flex justify-center mb-4">
+                  {step.icon}
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
+                <p className="text-gray-400">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-gray-900 rounded-2xl p-8 mb-8">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">Experience Winter Parking</h2>
+          
+          {/* Interactive Plan Selection */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={`bg-gray-800 rounded-xl p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover-glow ${
+                className={`bg-gray-800 rounded-xl p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 ${
                   selectedPlan === plan.id ? 'ring-2 ring-blue-500' : ''
                 }`}
                 onClick={() => setSelectedPlan(plan.id)}
               >
+                <img
+                  src={plan.image}
+                  alt={plan.name}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
                 <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
                 <p className="text-2xl text-blue-400 mb-4">{plan.price}</p>
                 <ul className="space-y-2">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="text-gray-300 flex items-center">
-                      <Check className="text-green-400 mr-2" size={16} />
+                      <Snowflake className="text-blue-400 mr-2" size={16} />
                       {feature}
                     </li>
                   ))}
@@ -117,78 +247,146 @@ function Home() {
             ))}
           </div>
 
-          {/* Features Section */}
+          {/* Feature Showcase */}
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-gray-800 rounded-xl p-6 overflow-hidden transform transition-all duration-300 hover:scale-105 hover-glow">
-              <h3 className="text-xl font-bold text-white mb-4">Smart Parking Assistance</h3>
-              <p className="text-gray-300 mb-4">
-                Real-time availability tracking and guided parking assistance using advanced sensors and AI algorithms.
-              </p>
+            <div className="bg-gray-800 rounded-xl p-6 overflow-hidden">
               <img
-                src="https://cdn.c-zentrix.com/metatag-images/conversational-chatbot-solution.jpeg"
-                alt="Smart Parking"
-                className="w-full h-56 object-cover rounded-lg"
+                src="https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&q=80"
+                alt="Winter Smart Parking"
+                className="w-full h-64 object-cover rounded-lg mb-6"
               />
+              <h3 className="text-xl font-bold text-white mb-4">Heated Smart Parking</h3>
+              <p className="text-gray-300">
+                Stay warm this winter with our climate-controlled parking spots. Advanced heating systems and snow removal
+                services ensure your vehicle is protected from harsh winter conditions.
+              </p>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 overflow-hidden transform transition-all duration-300 hover:scale-105 hover-glow">
-              <h3 className="text-xl font-bold text-white mb-4">Valet Service</h3>
-              <p className="text-gray-300 mb-4">
-                Professional valet services available at major commercial complexes and event venues.
-              </p>
+            
+            <div className="bg-gray-800 rounded-xl p-6 overflow-hidden">
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZqqrXb3Jmcn5orOJk-9xCzPxP5QUMDw8DWg&s"
-                alt="Valet Service"
-                className="w-full h-48 object-cover rounded-lg"
+                src="https://images.unsplash.com/photo-1551582045-6ec9c11d8697?auto=format&fit=crop&q=80"
+                alt="Winter Valet Service"
+                className="w-full h-64 object-cover rounded-lg mb-6"
               />
+              <h3 className="text-xl font-bold text-white mb-4">Winter Valet Service</h3>
+              <p className="text-gray-300">
+                Let our experienced winter drivers handle your vehicle. We'll warm up your car, clear the snow,
+                and ensure it's ready for your journey in any weather condition.
+              </p>
             </div>
           </div>
 
-          {/* CTA Section */}
+          {/* Call to Action */}
           <div className="text-center mt-12">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to Park Smart?</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">Ready for a Cozy Winter Parking Experience?</h3>
             <p className="text-gray-300 mb-6">
-              Join thousands of satisfied users enjoying stress-free parking
+              Join thousands of satisfied users who stay warm and stress-free during winter.
             </p>
             <Link
               to="/search"
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 inline-flex items-center gap-2 hover:scale-105 hover-glow"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 inline-flex items-center gap-2"
             >
-              <ChevronRight size={20} />
-              Start Parking Now
+              <SearchIcon size={20} />
+              Find Your Spot
             </Link>
           </div>
         </div>
-      </section>
 
-      {/* Surprise Modal */}
-      {showSurprise && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-8 rounded-2xl max-w-md w-full relative overflow-hidden">
-            <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-            <button
-              onClick={() => setShowSurprise(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white"
-            >
-              ×
-            </button>
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">Special Offer! 🎉</h2>
-            <div className="space-y-4 relative z-10">
-              <div className="bg-gray-800 p-6 rounded-xl">
-                <h3 className="text-xl font-bold text-green-400 mb-4">New User Discount</h3>
-                <p className="text-gray-300">Get <strong>40% off</strong> your first parking reservation</p>
-                <p className="text-sm text-gray-400 mt-2">Use code: PARKEASE40</p>
-              </div>
-              <button
-                onClick={() => setShowSurprise(false)}
-                className="w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition-colors"
-              >
-                Claim Offer
-              </button>
+        {/* List Your Space Modal */}
+        {showListSpace && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-900 p-6 rounded-2xl max-w-md w-full">
+              <h2 className="text-2xl font-bold text-white mb-4">List Your Space</h2>
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-gray-300 mb-2">Workplace Name</label>
+                  <div className="relative">
+                    <Building className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      className="w-full bg-gray-800 text-white px-10 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="Business name"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-gray-300 mb-2">Location</label>
+                  <div className="relative">
+                    <MapPinIcon className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      className="w-full bg-gray-800 text-white px-10 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="Address"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-gray-300 mb-2">Additional Details</label>
+                  <textarea
+                    className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 h-32"
+                    placeholder="Describe your parking space and requirements..."
+                  ></textarea>
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowListSpace(false)}
+                    className="flex-1 bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
+        {/* Surprise Modal */}
+        {showSurprise && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-900 p-8 rounded-2xl max-w-2xl w-full relative overflow-hidden">
+              <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+              <button
+                onClick={() => setShowSurprise(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-bold text-white mb-6 text-center">🎅 Holiday Parking Fortune 🎄</h2>
+              <div className="space-y-6 relative z-10">
+                <div className="bg-gray-800 p-6 rounded-xl">
+                  <h3 className="text-xl font-bold text-indigo-400 mb-4">Today's Lucky Spot: #{Math.floor(Math.random() * 100)}</h3>
+                  <p className="text-gray-300">Book this magical spot today and receive:</p>
+                  <ul className="list-disc list-inside text-gray-400 mt-2 space-y-2">
+                    <li>50% off your first hour</li>
+                    <li>A complimentary car wash</li>
+                    <li>Double reward points</li>
+                    <li>Special winter care package</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-800 p-6 rounded-xl">
+                  <h3 className="text-xl font-bold text-indigo-400 mb-4">Winter Parking Horoscope</h3>
+                  <p className="text-gray-300 italic">
+                    "The winter stars align for perfect parking today. Keep your spirits warm and your car warmer!"
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowSurprise(false)}
+                  className="w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition-colors"
+                >
+                  Claim Your Holiday Spot
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
       <Footer />
     </div>
   );

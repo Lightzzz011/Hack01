@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MapPin, Calendar, Clock, Search as SearchIcon } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link
 import Footer from '../components/Footer';
+import MapView from '../components/MapView'; // ✅ Make sure this file exists
 
 function Search() {
   const [location, setLocation] = useState('');
@@ -9,44 +9,33 @@ function Search() {
   const [time, setTime] = useState('');
   const [vehicleType, setVehicleType] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = () => {
-    setShowResults(true);
+    setLoading(true);
     setTimeout(() => {
-      navigate('/no-slots');
+      setLoading(false);
+      setShowResults(true);
     }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative overflow-hidden">
-      {/* Back to Home Button */}
-      <div className="absolute top-4 right-4 z-50">
-        <Link
-          to="/home"
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          Back to Home
-        </Link>
-      </div>
-
-      {/* Hero Section */}
-      <div className="relative h-[400px] mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-black">
+      <div className="relative h-[300px] mb-8">
         <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
         <img
-          src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&q=80"
-          alt="Parking"
+          src="https://images.unsplash.com/photo-1613310023042-ad79320c00ff?auto=format&fit=crop&q=80"
+          alt="Winter Parking"
           className="w-full h-full object-cover brightness-50"
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center animate-fade-in">
+          <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Find Your Perfect Spot</h1>
             <p className="text-xl text-gray-200">Secure, heated parking spots available 24/7</p>
           </div>
         </div>
       </div>
 
-      {/* Search Form */}
       <div className="max-w-7xl mx-auto p-6">
         <div className="bg-gray-900 rounded-2xl p-8 mb-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -97,8 +86,7 @@ function Search() {
           </button>
         </div>
 
-        {/* Loading Spinner */}
-        {showResults && (
+        {loading && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full">
               <div className="text-center">
@@ -109,7 +97,17 @@ function Search() {
             </div>
           </div>
         )}
+
+        {showResults && (
+          <div className="my-8">
+            <h2 className="text-2xl text-white font-bold mb-4">Nearby Parking Locations</h2>
+            <MapView />
+            
+    
+          </div>
+        )}
       </div>
+
       <Footer />
     </div>
   );
